@@ -4,17 +4,20 @@
       <div class="player player-you">
         <h2 class="player-title">{{ you.name }}</h2>
         <div class="player-heath-bar-wrapper">
-          <span class="player-heath-bar">{{ you.health }}</span>
+          <span class="player-heath-bar" :style="{width: you.health + '%'}">{{ you.health }}</span>
         </div>
       </div>
       <div class="player player-monster">
         <h2 class="player-title">{{ monster.name }}</h2>
         <div class="player-heath-bar-wrapper">
-          <span class="player-heath-bar">{{ monster.health }}</span>
+          <span class="player-heath-bar" :style="{width: monster.health + '%'}">{{ monster.health }}</span>
         </div>
       </div>
     </div>
-    <div class="controls">
+    <div class="start-game" v-if="!gameIsRunning">
+      <button @click="startNewGame">Start New Game!</button>
+    </div>
+    <div class="controls" v-else>
       <button @click="startRound('attack')">Attack</button>
       <button @click="startRound('special-attack')">Special Attack</button>
       <button @click="startRound('heal')">Heal</button>
@@ -35,6 +38,7 @@ export default {
   name: "TheMonsterSlayer",
   data: function() {
     return {
+      gameIsRunning: false,
       you: {
         name: "You",
         health: 100
@@ -47,6 +51,12 @@ export default {
     }
   },
   methods: {
+    startNewGame: function() {
+      this.you.health = 100
+      this.monster.health = 100
+      this.gameIsRunning = true
+      this.history = []
+    },
     startRound: function(action) {
       switch (action) {
         case "attack":
